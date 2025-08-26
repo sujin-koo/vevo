@@ -224,6 +224,14 @@ def build_large():
             emotion = entry.get("emotion", "")
             style   = entry.get("style", "")
 
+            # 🚨 text, emotion, style 중 하나라도 없으면 제외
+            if not text.strip() or not emotion.strip() or not style.strip():
+                print(f"[SKIP] {wav} (missing: "
+                    f"text={'EMPTY' if not text.strip() else 'OK'}, "
+                    f"emotion={'EMPTY' if not emotion.strip() else 'OK'}, "
+                    f"style={'EMPTY' if not style.strip() else 'OK'})")
+                continue
+
             meta[idx] = {
                 "language": "ko",
                 "text": text,
@@ -231,7 +239,7 @@ def build_large():
                 "end": dur,
                 "phone_count": count_hangul_syllables(text),
                 "emotion": emotion,
-                "style": style,   # <- 만약 키를 kind로 원하면 여기와 위 entry.get("style")만 kind로 바꾸세요.
+                "style": style,   
             }
 
         if meta:
@@ -436,3 +444,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
